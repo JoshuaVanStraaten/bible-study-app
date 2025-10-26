@@ -3,6 +3,9 @@ import axios from 'axios';
 
 const AuthContext = createContext(null);
 
+// Get API URL from environment variable
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
@@ -40,10 +43,9 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, { email, password });
       const { token, user } = response.data;
 
-      // Store token and user
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
 
@@ -61,10 +63,9 @@ export function AuthProvider({ children }) {
 
   const register = async (email, password) => {
     try {
-      const response = await axios.post('/api/auth/register', { email, password });
+      const response = await axios.post(`${API_BASE_URL}/api/auth/register`, { email, password });
       const { token, user } = response.data;
 
-      // Store token and user
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
 

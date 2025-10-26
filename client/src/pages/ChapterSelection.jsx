@@ -6,6 +6,8 @@ import axios from 'axios';
 import Button from '../components/Button';
 import LoadingSpinner from '../components/LoadingSpinner';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 // List of Bible books (Old Testament for now)
 const BIBLE_BOOKS = [
   'Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy',
@@ -41,7 +43,10 @@ function ChapterSelection() {
 
   const fetchLastRead = async () => {
     try {
-      const response = await axios.get('/api/bible/last-read');
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${API_BASE_URL}/api/bible/last-read`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       if (response.data) {
         setLastRead(response.data);
       }

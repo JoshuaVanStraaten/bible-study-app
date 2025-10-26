@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../components/Button';
 import LoadingSpinner from '../components/LoadingSpinner';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 function ReadingView() {
   const { book, chapter } = useParams();
   const navigate = useNavigate();
@@ -24,7 +26,9 @@ function ReadingView() {
       setLoading(true);
       setError(null);
       setShowExplanation(false);
-      const response = await axios.get(`/api/bible/chapter/${book}/${chapter}`);
+      const token = localStorage.getItem('token');
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const response = await axios.get(`${API_BASE_URL}/api/bible/chapter/${book}/${chapter}`, { headers });
       setData(response.data);
     } catch (err) {
       setError('Failed to load chapter. Please try again.');
